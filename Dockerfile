@@ -1,17 +1,20 @@
+# Use a lightweight Java 17 runtime
 FROM openjdk:17-jdk-slim
 
+# Set working directory
 WORKDIR /app
 
-# Install curl and unzip
+# Install dependencies (curl + unzip)
 RUN apt-get update && apt-get install -y curl unzip && rm -rf /var/lib/apt/lists/*
 
-# Download Snowstorm jar (use a stable release)
+# Download Snowstorm JAR (you can update to a newer version if released)
 RUN curl -L -o snowstorm.jar https://github.com/IHTSDO/snowstorm/releases/download/9.2.0/snowstorm-9.2.0.jar
 
-# Expose port
+# Expose default port (Railway will override this automatically)
 EXPOSE 8080
 
-# Environment variable for MongoDB (you'll set this in Railway)
+# Set MongoDB URI (will be replaced by Railway variable later)
 ENV SPRING_DATA_MONGODB_URI=mongodb://localhost:27017/snowstorm
 
-CMD ["java", "-jar", "snowstorm.jar"]
+# Start Snowstorm and bind to Railway's dynamic port
+CMD ["bash", "-lc", "java -Dserver.port=${PORT:-8080} -jar snowstorm.jar"]
