@@ -16,5 +16,8 @@ EXPOSE 8080
 # Set environment variable for MongoDB (you will override this in Railway variables)
 ENV SPRING_DATA_MONGODB_URI=mongodb://localhost:27017/snowstorm
 
+# Force disable Elasticsearch globally
+ENV DISABLE_ELASTICSEARCH=true
+
 # Run Snowstorm and listen on Railway's assigned $PORT
 ENTRYPOINT ["java", "-Dserver.port=${PORT:-8080}", "-jar", "snowstorm.jar"]
