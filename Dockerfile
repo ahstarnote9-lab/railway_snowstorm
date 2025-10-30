@@ -12,7 +12,7 @@ RUN printf '%s\n' \
   '#!/bin/sh' \
   'set -eu' \
   'echo "Starting Snowstorm with ELASTIC_URL=${ELASTIC_URL:-<unset>}"' \
-  'exec java -Dserver.port=${PORT:-8080} \' \
+  'exec java -Dserver.address=0.0.0.0 -Dserver.port=${PORT:-8080} \' \
   '  -Delasticsearch.urls=${ELASTIC_URL} \' \
   '  ${ELASTIC_USERNAME:+-Delasticsearch.username=${ELASTIC_USERNAME}} \' \
   '  ${ELASTIC_PASSWORD:+-Delasticsearch.password=${ELASTIC_PASSWORD}} \' \
