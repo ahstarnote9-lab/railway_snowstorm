@@ -4,20 +4,20 @@ FROM eclipse-temurin:17-jdk-jammy
 # Set the working directory
 WORKDIR /app
 
-# Install curl and unzip (used for downloading and extracting files)
+# Install curl and unzip (for downloading and extracting files)
 RUN apt-get update && apt-get install -y curl unzip && rm -rf /var/lib/apt/lists/*
 
-# Download Snowstorm JAR (replace version with newer if needed)
+# Download Snowstorm JAR (replace version if needed)
 RUN curl -L -o snowstorm.jar https://github.com/IHTSDO/snowstorm/releases/download/9.2.0/snowstorm-9.2.0.jar
 
-# Expose the default port (Railway will override this automatically)
+# Expose default port
 EXPOSE 8080
 
-# Set environment variable for MongoDB (you will override this in Railway variables)
+# Default MongoDB URI (you’ll override this in Railway)
 ENV SPRING_DATA_MONGODB_URI=mongodb://localhost:27017/snowstorm
 
-# Force disable Elasticsearch globally
+# Disable Elasticsearch globally
 ENV DISABLE_ELASTICSEARCH=true
 
-# Run Snowstorm and listen on Railway's assigned $PORT
-ENTRYPOINT ["java", "-Dserver.port=${PORT:-8080}", "-jar", "snowstorm.jar"]
+# Run Snowstorm and force it to use Railway's dynamic $PORT and disable Elasticsearch
+CMD ["bash", "-lc", "java -Dserver.port=${PORT:-8080} -Ddisable-elasticsearch=true -jar snowstorm.jar"]
